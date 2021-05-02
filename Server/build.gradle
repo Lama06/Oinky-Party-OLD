@@ -1,0 +1,35 @@
+plugins {
+    id "application"
+    id "java"
+}
+
+group "io.github.lama06"
+version "1.0.0"
+def mainClass = "io.github.lama06.oinkyparty.OinkyPartyServer"
+
+mainClassName  = mainClass
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.java-websocket:Java-WebSocket:1.5.1"
+    implementation "com.google.code.gson:gson:2.8.6"
+}
+
+application {
+    mainClass
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": mainClass
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
