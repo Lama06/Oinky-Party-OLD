@@ -30,6 +30,12 @@ public final class PartyManager {
         return null;
     }
 
+    public void tick() {
+        for(Party party : parties) {
+            party.tick();
+        }
+    }
+
     public Set<Party> getParties() {
         return parties;
     }

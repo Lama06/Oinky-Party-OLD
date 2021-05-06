@@ -3,7 +3,7 @@ const path = require("path")
 
 module.exports = {
     mode: "development",
-    entry: "./src/main.js",
+    entry: "./src/OinkyParty.js",
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/index.html",

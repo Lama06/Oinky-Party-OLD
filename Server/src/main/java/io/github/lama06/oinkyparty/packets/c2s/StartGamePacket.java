@@ -5,16 +5,16 @@ import io.github.lama06.oinkyparty.Player;
 import io.github.lama06.oinkyparty.packet.ClientPacket;
 
 /**
- * Erstellt eine Party. Der Ersteller der Party wird automatisch zur Party hinzugefügt.
+ * Startet ein Spiel in der aktuellen Party
  */
-public class CreatePartyPacket extends ClientPacket {
+public final class StartGamePacket extends ClientPacket {
     /**
-     * Name der Party, die erstellt wird
+     * Das Spiel, das gestartet werden soll
      */
-    public String name;
+    public String type;
 
     @Override
     public void apply(Player player, NetworkHandler listener) {
-        listener.handleCreatePartyPacket(player, this);
+        listener.handleStartGamePacket(player, this);
     }
 }

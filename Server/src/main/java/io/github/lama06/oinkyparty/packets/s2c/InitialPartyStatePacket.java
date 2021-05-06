@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class InitialPartyStatePacket extends ServerPacket {
+    public String name;
+    public int id;
     public List<SerializedPlayer> players = new ArrayList<>();
 
     public InitialPartyStatePacket(Party party) {
         super("initialPartyState");
 
+        name = party.getName();
+        id = party.getId();
         for(Player player : party.getPlayers()) {
             players.add(new SerializedPlayer(player));
         }

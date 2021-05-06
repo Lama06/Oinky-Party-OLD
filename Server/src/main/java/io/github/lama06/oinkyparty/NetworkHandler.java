@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import io.github.lama06.oinkyparty.packet.ClientPacket;
 import io.github.lama06.oinkyparty.packet.ClientPacketRegistry;
-import io.github.lama06.oinkyparty.packets.c2s.CreatePartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.JoinPartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.LeavePartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.QueryPartiesPacket;
+import io.github.lama06.oinkyparty.packets.c2s.*;
 import io.github.lama06.oinkyparty.packets.s2c.ListPartiesPacket;
 import org.java_websocket.WebSocket;
 
@@ -23,6 +20,7 @@ public final class NetworkHandler {
     }
 
     public void handleSocketDisconnected(WebSocket socket) {
+        // Spieler aus aktueller Party entfernen
         Player player = server.players.getPlayerByWebSocket(socket);
         Party party = server.parties.getPartyByPlayer(player);
         if(party != null) {
@@ -74,5 +72,26 @@ public final class NetworkHandler {
 
     public void handleQueryPartiesPacket(Player player, QueryPartiesPacket packet) {
         player.sendPacket(new ListPartiesPacket(server.parties));
+    }
+
+    public void handleStartGamePacket(Player player, StartGamePacket packet) {
+        Party party = server.parties.getPartyByPlayer(player);
+        if(party != null) {
+            party.handleStartGamePacket(packet);
+        }
+    }
+
+    public void handleStopGamePacket(Player player, StopGamePacket packet) {
+        Party party = server.parties.getPartyByPlayer(player);
+        if(party != null) {
+            party.handleStopGamePacket(packet);
+        }
+    }
+
+    public void handleGamePacket(Player player, ClientPacket packet) {
+        Party party = server.parties.getPartyByPlayer(player);
+        if(party != null) {
+            party.handleGamePacket(player, packet);
+        }
     }
 }

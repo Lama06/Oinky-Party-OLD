@@ -7,7 +7,7 @@ import org.java_websocket.WebSocket;
 
 public final class Player {
     private final WebSocket socket;
-    public String name = RandomPlayerNameProvider.getRandomName();
+    public final String name = RandomPlayerNameProvider.getRandomName();
     private final int id = Util.generateRandomId();
 
     public Player(WebSocket socket) {

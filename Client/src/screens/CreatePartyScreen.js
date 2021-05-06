@@ -1,71 +1,90 @@
-import { Container, Text } from "pixi.js"
-import { Button } from "../gui/Button"
-import { CreatePartyPacket } from "../network/Packets"
-import { TitleScreen } from "./TitleScreen"
+import { Text } from "pixi.js";
+import { Button } from "../gui/Button";
+import { CreatePartyPacket } from "../network/Packets";
+import { game } from "../OinkyParty";
+import {
+    buttonTextColor,
+    buttonTextSize,
+    Screen,
+    textColor,
+    textSize,
+    titleColor,
+    titleSize,
+} from "../Screen";
+import { TextScreen } from "./TextScreen";
+import { TitleScreen } from "./TitleScreen";
 
-export class CreatePartyScreen extends Container {
+export class CreatePartyScreen extends Screen {
     constructor() {
-        super()
+        super();
 
-        this.name = "Unbenannt"
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handlePartyNameClick = this.handlePartyNameClick.bind(this);
 
+        this.name = "Unbenannt";
+
+        // Title
         this.title = new Text("Party erstellen", {
-            fill: ["#ffffff"],
-            fontSize: 30,
-        })
-        this.title.anchor.set(0.5, 0.5)
+            fill: titleColor,
+            fontSize: titleSize,
+        });
+        this.title.anchor.set(0.5, 0.5);
         this.title.position.set(
             game.renderer.width / 2,
             game.renderer.height / 3
-        )
-        this.title.interactive = true
-        this.title.on("pointerdown", () => game.openScreen(new TitleScreen()))
-        this.addChild(this.title)
+        );
+        this.title.interactive = true;
+        this.title.on("pointerdown", () => game.openScreen(new TitleScreen()));
+        this.addChild(this.title);
 
+        // Party Name
         this.partyNameText = new Text(
             "Name der Party: " + this.name + "\n(Zum ändern des Names klicken)",
             {
-                fill: ["#ffffff"],
-                fontSize: 22,
+                fill: textColor,
+                fontSize: textSize,
             }
-        )
-        this.partyNameText.anchor.set(0.5)
+        );
+        this.partyNameText.anchor.set(0.5);
         this.partyNameText.position.set(
             game.renderer.width / 2,
             game.renderer.height / 3 + 50
-        )
-        this.partyNameText.interactive = true
-        this.partyNameText.on("pointerdown", () => {
-            let name = window.prompt("Namen der Party bitte hier eingeben: ")
-            if (name != null) {
-                this.partyNameText.text = "Name der Party: " + name
-                this.name = name
-            }
-        })
-        this.addChild(this.partyNameText)
+        );
+        this.partyNameText.interactive = true;
+        this.partyNameText.on("pointerdown", this.handlePartyNameClick);
+        this.addChild(this.partyNameText);
 
+        // Submit Button
         this.submitButton = new Button({
             width: 400,
             height: 40,
             label: new Text("Party erstellen", {
-                fill: ["#ffffff"],
-                fontSize: 30,
+                fill: buttonTextColor,
+                fontSize: buttonTextSize,
             }),
-            action: this.submit.bind(this),
-        })
+            action: this.handleSubmit,
+        });
         this.submitButton.pivot.set(
             this.submitButton.width / 2,
             this.submitButton.height / 2
-        )
+        );
         this.submitButton.position.set(
             game.renderer.width / 2,
             game.renderer.height / 3 + 100
-        )
-        this.addChild(this.submitButton)
+        );
+        this.addChild(this.submitButton);
     }
 
-    submit() {
-        game.socket.sendPacket(new CreatePartyPacket(this.name))
-        game.openScreen(new TitleScreen())
+    handlePartyNameClick() {
+        let name = window.prompt("Namen der Party hier eingeben: ");
+        if (name != null) {
+            this.partyNameText.text = "Name der Party: " + name;
+            this.name = name;
+        }
+    }
+
+    handleSubmit() {
+        game.openScreen(new TextScreen("Party wird betreten..."));
+        game.socket.sendPacket(new CreatePartyPacket(this.name));
     }
 }

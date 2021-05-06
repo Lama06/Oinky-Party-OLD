@@ -1,9 +1,7 @@
 package io.github.lama06.oinkyparty.packet;
 
-import io.github.lama06.oinkyparty.packets.c2s.CreatePartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.JoinPartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.LeavePartyPacket;
-import io.github.lama06.oinkyparty.packets.c2s.QueryPartiesPacket;
+import io.github.lama06.oinkyparty.counter_game.C2SAddCounterPacket;
+import io.github.lama06.oinkyparty.packets.c2s.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,5 +22,9 @@ public final class ClientPacketRegistry {
         register("joinParty", JoinPartyPacket.class);
         register("leaveParty", LeavePartyPacket.class);
         register("queryParties", QueryPartiesPacket.class);
+        register("startGame", StartGamePacket.class);
+        register("stopGame", StopGamePacket.class);
+
+        register("counterGame-addCounter", C2SAddCounterPacket.class);
     }
 }
