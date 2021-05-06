@@ -20,7 +20,7 @@ export class CounterGame extends Screen {
 
         this.counter = 0;
 
-        this.counterText = new Text("Counter: 0 (Hier klicken)", {
+        this.counterText = new Text("Counter: 0", {
             fill: titleColor,
             size: 50,
         });
