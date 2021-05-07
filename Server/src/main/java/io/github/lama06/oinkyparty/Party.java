@@ -32,7 +32,7 @@ public final class Party {
     public void addPlayer(Player player) {
         brodcast(new PlayerJoinedPartyPacket(player));
         players.add(player);
-        player.sendPacket(new InitialPartyStatePacket(this));
+        player.sendPacket(new InitialPartyStatePacket(player, this));
     }
 
     public void removePlayer(Player player) {

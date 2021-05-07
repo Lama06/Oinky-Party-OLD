@@ -5,13 +5,13 @@ import { PartyListScreen } from "./PartyListScreen";
 import {
     buttonTextColor,
     buttonTextSize,
-    Screen,
     titleColor,
     titleSize,
 } from "../Screen";
 import { game } from "../OinkyParty";
+import { GuiScreen } from "./GuiScreen";
 
-export class TitleScreen extends Screen {
+export class TitleScreen extends GuiScreen {
     constructor() {
         super();
         // Titel

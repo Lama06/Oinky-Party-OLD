@@ -1,8 +1,9 @@
 import { Text } from "@pixi/text";
 import { game } from "../OinkyParty";
-import { Screen, titleColor, titleSize } from "../Screen";
+import { titleColor, titleSize } from "../Screen";
+import { GuiScreen } from "./GuiScreen";
 
-export class TextScreen extends Screen {
+export class TextScreen extends GuiScreen {
     constructor(text) {
         super();
 

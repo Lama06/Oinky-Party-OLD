@@ -5,10 +5,10 @@ import { game } from "../OinkyParty";
 import {
     buttonTextColor,
     buttonTextSize,
-    Screen,
     titleColor,
     titleSize,
 } from "../Screen";
+import { GuiScreen } from "./GuiScreen";
 import { PartyScreen } from "./PartyScreen";
 
 const games = [
@@ -18,7 +18,7 @@ const games = [
     },
 ];
 
-export class StartGameScreen extends Screen {
+export class StartGameScreen extends GuiScreen {
     constructor() {
         super();
 

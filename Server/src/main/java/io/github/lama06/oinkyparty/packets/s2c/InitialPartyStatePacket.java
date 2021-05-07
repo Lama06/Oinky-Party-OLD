@@ -10,15 +10,17 @@ import java.util.List;
 public final class InitialPartyStatePacket extends ServerPacket {
     public String name;
     public int id;
+    public int ownId;
     public List<SerializedPlayer> players = new ArrayList<>();
 
-    public InitialPartyStatePacket(Party party) {
+    public InitialPartyStatePacket(Player player, Party party) {
         super("initialPartyState");
 
         name = party.getName();
         id = party.getId();
-        for(Player player : party.getPlayers()) {
-            players.add(new SerializedPlayer(player));
+        ownId = player.getId();
+        for(Player partyPlayer : party.getPlayers()) {
+            players.add(new SerializedPlayer(partyPlayer));
         }
     }
 

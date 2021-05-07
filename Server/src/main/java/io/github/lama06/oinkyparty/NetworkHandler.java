@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import io.github.lama06.oinkyparty.packet.ClientPacket;
 import io.github.lama06.oinkyparty.packet.ClientPacketRegistry;
 import io.github.lama06.oinkyparty.packets.c2s.*;
+import io.github.lama06.oinkyparty.packets.s2c.ClientLeftPartyPacket;
 import io.github.lama06.oinkyparty.packets.s2c.ListPartiesPacket;
 import org.java_websocket.WebSocket;
 
@@ -59,7 +60,12 @@ public final class NetworkHandler {
 
         Party newParty = server.parties.getPartyById(packet.id);
         if(newParty != null) {
-            newParty.addPlayer(player);
+            // Spieler nur hinzufügen, wenn in der Party nicht gerade ein Spiel läuft
+            if(!newParty.isGameRunning()) {
+                newParty.addPlayer(player);
+            } else {
+                player.sendPacket(new ClientLeftPartyPacket());
+            }
         }
     }
 

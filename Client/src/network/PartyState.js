@@ -15,6 +15,7 @@ export class PartyState extends EventTarget {
     resetState() {
         this.isInParty = false;
         this.players = null;
+        this.ownId = null;
         this.name = null;
         this.id = null;
     }
@@ -22,6 +23,7 @@ export class PartyState extends EventTarget {
     handleClientJoinedPartyPacket(packet) {
         this.isInParty = true;
         this.players = packet.players;
+        this.ownId = packet.ownId;
         this.name = packet.name;
         this.id = packet.id;
     }

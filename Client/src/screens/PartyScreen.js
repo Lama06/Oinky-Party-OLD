@@ -3,10 +3,11 @@ import { Button } from "../gui/Button";
 import { LeavePartyPacket } from "../network/Packets";
 import { game } from "../OinkyParty";
 import { textColor, textSize } from "../Screen";
-import { buttonTextColor, buttonTextSize, Screen } from "../Screen";
+import { buttonTextColor, buttonTextSize } from "../Screen";
+import { GuiScreen } from "./GuiScreen";
 import { StartGameScreen } from "./StartGameScreen";
 
-export class PartyScreen extends Screen {
+export class PartyScreen extends GuiScreen {
     constructor() {
         super();
 
@@ -99,10 +100,13 @@ export class PartyScreen extends Screen {
         for (let i = 0; i < players.length; i++) {
             let player = players[i];
 
-            let playerText = new Text(player.name, {
-                fill: textColor,
-                fontSize: textSize,
-            });
+            let playerText = new Text(
+                player.name + (player.id == game.party.ownId ? " (Du)" : ""),
+                {
+                    fill: textColor,
+                    fontSize: textSize,
+                }
+            );
             playerText.pivot.set(playerText.width / 2, playerText.height / 2);
             playerText.position.set(0, 30 * i);
             this.playerList.addChild(playerText);

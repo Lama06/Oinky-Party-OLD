@@ -33,7 +33,7 @@ export class NetworkHandler {
 
         game.party.handleClientJoinedPartyPacket(packet);
 
-        game.openScreen(new PartyScreen(packet));
+        game.openScreen(new PartyScreen());
     }
 
     handleClientLeftPartyPacket(event) {

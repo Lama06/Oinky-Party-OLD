@@ -10,6 +10,6 @@ import io.github.lama06.oinkyparty.packet.ClientPacket;
 public final class StopGamePacket extends ClientPacket {
     @Override
     public void apply(Player player, NetworkHandler listener) {
-
+        listener.handleStopGamePacket(player, this);
     }
 }

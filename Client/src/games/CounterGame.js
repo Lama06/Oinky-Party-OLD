@@ -1,7 +1,8 @@
 import { Text } from "@pixi/text";
 import { ClientPacket } from "../network/Packets";
 import { game } from "../OinkyParty";
-import { Screen, titleColor } from "../Screen";
+import { titleColor } from "../Screen";
+import { GameScreen } from "./GameScreen";
 
 class AddCounterPacket extends ClientPacket {
     constructor() {
@@ -9,7 +10,7 @@ class AddCounterPacket extends ClientPacket {
     }
 }
 
-export class CounterGame extends Screen {
+export class CounterGame extends GameScreen {
     constructor() {
         super();
 
