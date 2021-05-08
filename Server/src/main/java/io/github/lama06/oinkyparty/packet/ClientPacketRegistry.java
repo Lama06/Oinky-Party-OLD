@@ -1,6 +1,8 @@
 package io.github.lama06.oinkyparty.packet;
 
 import io.github.lama06.oinkyparty.counter_game.C2SAddCounterPacket;
+import io.github.lama06.oinkyparty.flappy_bird.packets.C2SPlayerDiedPacket;
+import io.github.lama06.oinkyparty.flappy_bird.packets.C2SPlayerJumpedPacket;
 import io.github.lama06.oinkyparty.packets.c2s.*;
 
 import java.util.HashMap;
@@ -26,5 +28,8 @@ public final class ClientPacketRegistry {
         register("stopGame", StopGamePacket.class);
 
         register("counterGame-addCounter", C2SAddCounterPacket.class);
+
+        register("flappyBird-playerDied", C2SPlayerDiedPacket.class);
+        register("flappyBird-playerJumped", C2SPlayerJumpedPacket.class);
     }
 }

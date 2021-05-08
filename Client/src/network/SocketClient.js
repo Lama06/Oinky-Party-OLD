@@ -36,6 +36,8 @@ export class SocketClient extends EventTarget {
     }
 
     handleError() {
-        alert("WebSocket Error");
+        alert(
+            "WebSocket Error. Versuche die Seite neu zu laden, um dich erneut zu verbinden."
+        );
     }
 }

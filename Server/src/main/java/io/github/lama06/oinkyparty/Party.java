@@ -1,6 +1,7 @@
 package io.github.lama06.oinkyparty;
 
 import io.github.lama06.oinkyparty.counter_game.CounterGame;
+import io.github.lama06.oinkyparty.flappy_bird.FlappyBirdGame;
 import io.github.lama06.oinkyparty.packet.ClientPacket;
 import io.github.lama06.oinkyparty.packet.ServerPacket;
 import io.github.lama06.oinkyparty.packets.c2s.StartGamePacket;
@@ -77,6 +78,8 @@ public final class Party {
             case "counter":
                 game = new CounterGame(this);
                 break;
+            case "flappyBird":
+                game = new FlappyBirdGame(this);
         }
         brodcast(new GameStartedPacket(type));
     }

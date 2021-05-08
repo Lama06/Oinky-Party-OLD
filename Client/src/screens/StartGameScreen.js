@@ -16,6 +16,10 @@ const games = [
         name: "Counter",
         type: "counter",
     },
+    {
+        name: "Flappy Bird",
+        type: "flappyBird",
+    },
 ];
 
 export class StartGameScreen extends GuiScreen {

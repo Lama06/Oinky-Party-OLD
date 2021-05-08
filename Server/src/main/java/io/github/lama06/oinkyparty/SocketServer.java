@@ -23,7 +23,7 @@ public final class SocketServer extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket socket, int code, String reason, boolean remote) {
-        System.out.println("Verbindung geschlossen von: " + socket.getRemoteSocketAddress());
+        System.out.println("Verbindung geschlossen");
         server.listener.handleSocketDisconnected(socket);
     }
 

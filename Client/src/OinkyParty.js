@@ -38,3 +38,4 @@ class OinkyParty extends Application {
 
 export const game = new OinkyParty();
 game.init();
+window.game = game;

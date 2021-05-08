@@ -1,4 +1,5 @@
 import { CounterGame } from "../games/CounterGame";
+import { FlappyBirdGame } from "../games/FlappyBirdGame";
 import { game } from "../OinkyParty";
 import { PartyScreen } from "../screens/PartyScreen";
 import { TitleScreen } from "../screens/TitleScreen";
@@ -60,8 +61,14 @@ export class NetworkHandler {
         let packet = event.detail;
         let type = packet.type;
 
+        if (!game.party.isInParty) {
+            return;
+        }
+
         if (type == "counter") {
             game.openScreen(new CounterGame());
+        } else if (type == "flappyBird") {
+            game.openScreen(new FlappyBirdGame());
         }
     }
 
