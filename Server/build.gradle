@@ -4,7 +4,7 @@ plugins {
 }
 
 group "io.github.lama06"
-version "1.0.0"
+version project.version
 def mainClass = "io.github.lama06.oinkyparty.OinkyPartyServer"
 
 mainClassName  = mainClass
