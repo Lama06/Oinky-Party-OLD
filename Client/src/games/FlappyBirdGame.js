@@ -35,8 +35,10 @@ class FlappyBird extends Graphics {
          */
         this.fallingSpeed = fallingSpeedAfterJump;
 
+        let size = game.renderer.height / 25;
+
         this.beginFill(game.party.ownId == id ? 0xff0000 : 0xffffff);
-        this.drawRect(0, 0, 50, 50);
+        this.drawRect(0, 0, size, size);
         this.endFill();
 
         this.pivot.set(this.width / 2, this.height / 2);
@@ -69,7 +71,15 @@ class FlappyBird extends Graphics {
     }
 }
 
-const obstaclesCoordinates = [0.5, 0.3, 0.6, 0.1, 0.7, 0.5, 0.3, 0.0];
+/**
+ * Die Koordinaten, bei denen jeweils der obere Anfang des Durchgangs bei den Hindernissen sein soll.
+ *
+ * Sie sind relativ zur Bildschirmgröße: 0 bedeutet ganz unten, 1 ganz oben.
+ *
+ * Damit man noch genug Platz hat, um durch zu fliegen, sollte der höchste Wert 0.8 sein, weil
+ * die Höhe des Durchganges bei 2 / 10 der Höhe des Bildschirme liegt.
+ */
+const obstaclesCoordinates = [0.5, 0.1, 0.7, 0.8, 0.0, 0.5, 0.3, 0.5];
 
 function getObstacleCoordinate(id) {
     return obstaclesCoordinates[id % obstaclesCoordinates.length];
@@ -80,16 +90,28 @@ class Obstacle extends Graphics {
         super();
 
         this.id = id;
+        /**
+         * Der Punkt, wo die Lücke im Hinderniss ist.
+         */
         this.coordinate = getObstacleCoordinate(id);
 
         this.beginFill(0xffffff);
-        this.drawRect(0, 0, 60, this.coordinate * game.renderer.height);
+
+        let width = game.renderer.width / 24;
+
+        // oberer Teil des Hindernisses
+        this.drawRect(0, 0, width, this.coordinate * game.renderer.height);
+
+        // unterer Teil des Hindernisses
         this.drawRect(
             0,
-            this.coordinate * game.renderer.height + 250,
-            60,
-            game.renderer.height - this.coordinate * game.renderer.height + 250
+            this.coordinate * game.renderer.height + game.renderer.height / 5,
+            width,
+            game.renderer.height -
+                this.coordinate * game.renderer.height +
+                game.renderer.height / 5
         );
+
         this.endFill();
 
         this.position.set(game.renderer.width, 0);
@@ -183,7 +205,7 @@ export class FlappyBirdGame extends GameScreen {
 
         if (this.ticksToNextObstacle <= 0) {
             this.spawnObstacle();
-            this.ticksToNextObstacle = 500;
+            this.ticksToNextObstacle = 300;
             this.nextObstacleId++;
         }
     }
