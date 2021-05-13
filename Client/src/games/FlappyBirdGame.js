@@ -1,14 +1,22 @@
+import { Container } from "@pixi/display";
 import { Graphics } from "@pixi/graphics";
 import { ClientPacket } from "../network/Packets";
 import { game } from "../OinkyParty";
+import { rectsIntersect } from "../util/Collision";
 import { GameScreen } from "./GameScreen";
 
+/**
+ * Ein Packet, das an den Server gesendet wird, wenn der Spieler gestorben ist
+ */
 class PlayerDiedPacket extends ClientPacket {
     constructor() {
         super("flappyBird-playerDied");
     }
 }
 
+/**
+ * Ein Packet, das an den Server gesendet wird, wenn der Spieler gesprungen ist
+ */
 class PlayerJumpedPacket extends ClientPacket {
     constructor(y) {
         super("flappyBird-playerJumped");
@@ -23,6 +31,9 @@ class FlappyBird extends Graphics {
     constructor(id) {
         super();
 
+        /**
+         * Die id des Spielers
+         */
         this.id = id;
 
         /**
@@ -80,12 +91,13 @@ class FlappyBird extends Graphics {
  * die Höhe des Durchganges bei 2 / 10 der Höhe des Bildschirme liegt.
  */
 const obstaclesCoordinates = [0.5, 0.1, 0.7, 0.8, 0.0, 0.5, 0.3, 0.5];
+const obstacleColor = 0xffffff;
 
 function getObstacleCoordinate(id) {
     return obstaclesCoordinates[id % obstaclesCoordinates.length];
 }
 
-class Obstacle extends Graphics {
+class Obstacle extends Container {
     constructor(id) {
         super();
 
@@ -95,15 +107,20 @@ class Obstacle extends Graphics {
          */
         this.coordinate = getObstacleCoordinate(id);
 
-        this.beginFill(0xffffff);
-
         let width = game.renderer.width / 24;
 
         // oberer Teil des Hindernisses
-        this.drawRect(0, 0, width, this.coordinate * game.renderer.height);
+        let upper = new Graphics();
+        upper.beginFill(obstacleColor);
+        upper.drawRect(0, 0, width, this.coordinate * game.renderer.height);
+        upper.endFill();
+        this.addChild(upper);
+        this.upper = upper;
 
         // unterer Teil des Hindernisses
-        this.drawRect(
+        let lower = new Graphics();
+        lower.beginFill(obstacleColor);
+        lower.drawRect(
             0,
             this.coordinate * game.renderer.height + game.renderer.height / 5,
             width,
@@ -111,8 +128,9 @@ class Obstacle extends Graphics {
                 this.coordinate * game.renderer.height +
                 game.renderer.height / 5
         );
-
-        this.endFill();
+        lower.endFill();
+        this.addChild(lower);
+        this.lower = lower;
 
         this.position.set(game.renderer.width, 0);
     }
@@ -130,9 +148,8 @@ export class FlappyBirdGame extends GameScreen {
         this.handleKeyPressed = this.handleKeyPressed.bind(this);
         this.handleClicked = this.handleClicked.bind(this);
         this.handlePlayerDiedPacket = this.handlePlayerDiedPacket.bind(this);
-        this.handlePlayerJumpedPacket = this.handlePlayerJumpedPacket.bind(
-            this
-        );
+        this.handlePlayerJumpedPacket =
+            this.handlePlayerJumpedPacket.bind(this);
 
         /**
          * Ein Array aller Hindernisse
@@ -146,6 +163,7 @@ export class FlappyBirdGame extends GameScreen {
          * Gibt die id des nächsten Hindernisses an
          */
         this.nextObstacleId = 0;
+        this.isDead = false;
 
         /**
          * Die Flappy Birds der Spieler in der Runde
@@ -193,14 +211,17 @@ export class FlappyBirdGame extends GameScreen {
     }
 
     tick(delta) {
+        // Birds ticken
         for (let bird of this.birds) {
             bird.tick(delta);
         }
 
+        // Hindernisse ticken
         for (let obstacle of this.obstacles) {
             obstacle.tick(delta);
         }
 
+        // Neue Hindernisse spawnen
         this.ticksToNextObstacle -= 1 * delta;
 
         if (this.ticksToNextObstacle <= 0) {
@@ -208,6 +229,30 @@ export class FlappyBirdGame extends GameScreen {
             this.ticksToNextObstacle = 300;
             this.nextObstacleId++;
         }
+
+        // Überprüfen, ob der Spieler gestorben ist
+        if (!this.isDead) {
+            if (
+                this.getOwnBird().isOutsideDisplay() ||
+                this.isBirdCollidingWithObstacle(this.getOwnBird())
+            ) {
+                game.socket.sendPacket(new PlayerDiedPacket());
+                this.isDead = true;
+            }
+        }
+    }
+
+    isBirdCollidingWithObstacle(bird) {
+        for (let obstacle of this.obstacles) {
+            if (
+                rectsIntersect(obstacle.upper, bird) ||
+                rectsIntersect(obstacle.lower, bird)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     getBird(id) {
@@ -231,12 +276,13 @@ export class FlappyBirdGame extends GameScreen {
     }
 
     handleKeyPressed(event) {
-        if (event.code == "Space") {
+        if (event.code == "Space" && !this.isDead) {
             this.jumpOwnBird();
         }
     }
 
     handleClicked() {
+        if (this.isDead) return;
         this.jumpOwnBird();
     }
 
@@ -248,7 +294,8 @@ export class FlappyBirdGame extends GameScreen {
     handlePlayerDiedPacket(event) {
         let packet = event.detail;
 
-        this.birds = this.birds.filter((bird) => bird.id != packet.id);
+        let bird = this.getBird(packet.id);
+        bird.visible = false;
     }
 
     handlePlayerJumpedPacket(event) {
